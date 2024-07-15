@@ -1,46 +1,46 @@
 # monitor_temp_files
 
-/*
+
 # function 구문
-DROP function monitor_temp_files();
-CREATE OR REPLACE FUNCTION monitor_temp_files()
-RETURNS TABLE (
-    pid int,
-    datname text,
-    usename text,
-    query text,
-    temp_files int,
-    temp_Mbytes bigint,
-    io_timings double precision
-) AS $$
-BEGIN
-    RETURN QUERY
-    SELECT
-        a.pid,
-        a.datname::text,
-        a.usename::text,
-        a.query::text,
-        d.temp_files::int,
-        d.temp_bytes/1024 AS temp_Mbytes,
-        d.blk_read_time + d.blk_write_time AS io_timings
-    FROM
-        pg_stat_activity a
-    JOIN
-        pg_stat_database d ON a.datid = d.datid
-    WHERE
-        d.temp_files > 0
-        ORDER BY temp_Mbytes desc;
-END;
-$$ LANGUAGE plpgsql;
-*/
+DROP function monitor_temp_files();                                \
+CREATE OR REPLACE FUNCTION monitor_temp_files()\
+RETURNS TABLE (\
+    pid int,\
+    datname text,\
+    usename text,\
+    query text,\
+    temp_files int,\
+    temp_Mbytes bigint,\
+    io_timings double precision\
+) AS $$\
+BEGIN\
+    RETURN QUERY\
+    SELECT\
+        a.pid,\
+        a.datname::text,\
+        a.usename::text,\
+        a.query::text,\
+        d.temp_files::int,\
+        d.temp_bytes/1024 AS temp_Mbytes,\
+        d.blk_read_time + d.blk_write_time AS io_timings\
+    FROM\
+        pg_stat_activity a\
+    JOIN\
+        pg_stat_database d ON a.datid = d.datid\
+    WHERE\
+        d.temp_files > 0\
+        ORDER BY temp_Mbytes desc;\
+END;\
+$$ LANGUAGE plpgsql;\
+\
 
 # 사용방법
 select * from monitor_temp_files();
 
 #데이터 베이스 전체에서 사용하는 tempfile 갯수와 사이즈
-SELECT temp_files AS "Temporary files count",
-temp_bytes/1024 AS "Size of temporary files(MB)"
-FROM   pg_stat_database db WHERE datname = 'DB_NAME';
+SELECT temp_files AS "Temporary files count",\
+temp_bytes/1024 AS "Size of temporary files(MB)"\
+FROM   pg_stat_database db WHERE datname = 'DB_NAME';\
 
 #임시 파일 경로
 /data/master/gpseg-1/base/pgsql_tmp
