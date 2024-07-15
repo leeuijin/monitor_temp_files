@@ -1,5 +1,6 @@
 # monitor_temp_files
 
+/*
 # function 구문
 DROP function monitor_temp_files();
 CREATE OR REPLACE FUNCTION monitor_temp_files()
@@ -31,6 +32,7 @@ BEGIN
         ORDER BY temp_Mbytes desc;
 END;
 $$ LANGUAGE plpgsql;
+*/
 
 # 사용방법
 select * from monitor_temp_files();
