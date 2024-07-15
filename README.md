@@ -1,5 +1,3 @@
-# monitor_temp_files
-
 
 # function 구문
 DROP function monitor_temp_files();                                \
